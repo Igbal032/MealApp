@@ -1,14 +1,28 @@
-import { FlatList, Image, StyleSheet, Text, View } from "react-native";
+import { useLayoutEffect } from "react";
+import { Image, StyleSheet, Text, View, ScrollView, Button } from "react-native";
+import IconButton from "../components/IconButton";
 import MealDetail from "../components/MealDetail";
 import List from "../components/MealDetail/List";
 import Subtitle from "../components/MealDetail/Subtitle";
 import { MEALS } from "../data/dummy-data";
 
-function MealDetailScreen({ route }) {
+function MealDetailScreen({ route, navigation }) {
+
+  function addFavoriteButtonHandler(){
+    console.log("PRESSED !!!");
+}
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => {
+        return  <IconButton color='white' icon='star' onPress={addFavoriteButtonHandler}/>
+      },
+    });
+  }, [navigation, addFavoriteButtonHandler]);
   const mealId = route.params.mealId;
   const selectedMeal = MEALS.find((meal) => meal.id === mealId);
   return (
-    <View style={styles.mealDetail}>
+    <ScrollView style={styles.rootContainer}>
       <View>
         <Image style={styles.image} source={{ uri: selectedMeal.imageUrl }} />
         <Text style={styles.title}>{selectedMeal.title}</Text>
@@ -18,20 +32,23 @@ function MealDetailScreen({ route }) {
           affordability={selectedMeal.affordability}
           textStyle={styles.detailText}
         />
-        <Subtitle>Ingredients</Subtitle>
-        <List data={selectedMeal.ingredients}/>
-        <Subtitle>Steps</Subtitle>
-        <List data={selectedMeal.steps}/>
+        <View style={styles.listOutherContainer}>
+          <View style={styles.listContainer}>
+            <Subtitle>Ingredients</Subtitle>
+            <List data={selectedMeal.ingredients} />
+            <Subtitle>Steps</Subtitle>
+            <List data={selectedMeal.steps} />
+          </View>
+        </View>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 export default MealDetailScreen;
 
 const styles = StyleSheet.create({
-  mealDetail: {
-    margin: 16,
-    borderRadius: 8,
+  rootContainer: {
+    marginBottom: 32,
   },
   image: {
     width: "100%",
@@ -46,5 +63,11 @@ const styles = StyleSheet.create({
   },
   detailText: {
     color: "white",
+  },
+  listContainer: {
+    width: "80%",
+  },
+  listOutherContainer: {
+    alignItems: "center",
   },
 });

@@ -27,9 +27,8 @@ export default function App() {
             component={CategoriesScreen}
             options={{
               title: "All Categories",
-              headerTitleAlign:'center'
+              headerTitleAlign: "center",
             }}
-            
           />
           <Stack.Screen
             name="MealOverview"
@@ -49,7 +48,7 @@ export default function App() {
             component={MealDetailScreen}
             options={{
               title: "Details",
-              headerTitleAlign:'center'
+              headerTitleAlign: "center"
             }}
           />
         </Stack.Navigator>
