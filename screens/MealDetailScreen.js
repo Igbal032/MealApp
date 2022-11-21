@@ -20,7 +20,6 @@ function MealDetailScreen({ route, navigation }) {
   const favoriteMealIds = useSelector((state)=> state.favorideMeals.ids)
   // const FavoriteMealsCtx = useContext(FavoritesContext);
   const mealId = route.params.mealId;
-  console.log(favoriteMealIds);
   // const mealIsFavoride = FavoriteMealsCtx.ids.includes(mealId);
   const mealIsFavoride  = favoriteMealIds.includes(mealId);
   useLayoutEffect(() => {
