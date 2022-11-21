@@ -1,25 +1,56 @@
-import { useLayoutEffect } from "react";
-import { Image, StyleSheet, Text, View, ScrollView, Button } from "react-native";
+import { useContext, useLayoutEffect } from "react";
+import {
+  Image,
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  Button,
+} from "react-native";
 import IconButton from "../components/IconButton";
 import MealDetail from "../components/MealDetail";
 import List from "../components/MealDetail/List";
 import Subtitle from "../components/MealDetail/Subtitle";
 import { MEALS } from "../data/dummy-data";
-
+import {useDispatch, useSelector} from 'react-redux'
+import {addFavoriteMeal, removeFavoriteMeal} from '../store/redux/favorites'
+// import { FavoritesContext } from "../store/favorite-context";
 function MealDetailScreen({ route, navigation }) {
-
-  function addFavoriteButtonHandler(){
-    console.log("PRESSED !!!");
-}
-
+  const dispatch = useDispatch();
+  const favoriteMealIds = useSelector((state)=> state.favorideMeals.ids)
+  // const FavoriteMealsCtx = useContext(FavoritesContext);
+  const mealId = route.params.mealId;
+  console.log(favoriteMealIds);
+  // const mealIsFavoride = FavoriteMealsCtx.ids.includes(mealId);
+  const mealIsFavoride  = favoriteMealIds.includes(mealId);
   useLayoutEffect(() => {
+    console.log(mealIsFavoride + ' mealIsFavoride')
     navigation.setOptions({
       headerRight: () => {
-        return  <IconButton color='white' icon='star' onPress={addFavoriteButtonHandler}/>
+        return (
+          <IconButton
+            color="white"
+            icon={mealIsFavoride ? 'star' : 'star-outline'}
+            onPress={changeFavoriteStatusButtonHandler}
+          />
+        );
       },
     });
-  }, [navigation, addFavoriteButtonHandler]);
-  const mealId = route.params.mealId;
+  }, [navigation, changeFavoriteStatusButtonHandler]);
+  function changeFavoriteStatusButtonHandler() {
+    if (mealIsFavoride) {
+      console.log(favoriteMealIds + '  adding')
+      // FavoriteMealsCtx.removeFavorite(mealId);
+      dispatch(removeFavoriteMeal({mealId: mealId}))
+    }
+    else{
+      console.log(favoriteMealIds + '  removing')
+
+      // FavoriteMealsCtx.addFavorite(mealId);
+      dispatch(addFavoriteMeal({mealId: mealId}))
+    }
+  }
+
   const selectedMeal = MEALS.find((meal) => meal.id === mealId);
   return (
     <ScrollView style={styles.rootContainer}>
